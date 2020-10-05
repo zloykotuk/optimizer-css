@@ -1,0 +1,22 @@
+{
+  "name": "zloykotuk/optimzerhtml",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ZK",
+      "email": "email@example.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Html\\": "src/Html"
+    }
+  },
+  "require": {
+    "curl/curl": "^2.3",
+    "ext-dom": "*",
+    "sabberworm/php-css-parser": "*"
+  }
+}

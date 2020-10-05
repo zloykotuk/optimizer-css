@@ -1,0 +1,4 @@
+
+u	php:S3776"TRefactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.(ÛãË«úÿÿÿÿ8×óÏ™Î.
+D	php:S1068"(Remove this unused "$dom" private field.(ªÑòŒ8ôÖã—Î.
+h	php:S1117"GRename "$dom" which has the same name as the field declared at line 13.(œ×Æ‰üÿÿÿÿ8ôÖã—Î.
