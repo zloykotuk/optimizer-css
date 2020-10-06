@@ -10,10 +10,10 @@ class CSS
 
     public $searched = false;
 
-    public function parse($path)
+    public function parse($path, $arrayUrls)
     {
         $css = (new Parser(file_get_contents($path)))->parse();
-        $htmlArray = (new Html("https://deutscher-fenstershop.de/"))->get();
+        $htmlArrays = (new Html($arrayUrls))->get();
 
         foreach($css->getAllDeclarationBlocks() as $oBlock) {
             foreach($oBlock->getSelectors() as $oSelector) {
@@ -46,12 +46,14 @@ class CSS
 
                 foreach ($array as $value) {
 
-                    if (is_array($value)) {
-                        foreach ($value as $searchTag => $searchValue){
-                            $this->searchCssInHtml($htmlArray, $searchValue, $searchTag);
+                    foreach ($htmlArrays as $htmlArray) {
+                        if (is_array($value)) {
+                            foreach ($value as $searchTag => $searchValue){
+                                $this->searchCssInHtml($htmlArray, $searchValue, $searchTag);
+                            }
+                        } else {
+                            $this->searchCssInHtml($htmlArray, $value, 'tag');
                         }
-                    } else {
-                        $this->searchCssInHtml($htmlArray, $value, 'tag');
                     }
                 }
 
@@ -65,27 +67,32 @@ class CSS
         print_r($css->render($oFormat));
     }
 
-    public function searchCssInHtml($array, $searchValue, $searchTag) {
+    public function searchCssInHtml($array, $searchValue, $searchTag)
+    {
         foreach ($array as $key => $value) {
             if ($searchTag === 'tag' && $value->tag == $searchValue) {
                 $this->searched = true;
             }
 
             if ($searchTag === 'class') {
-                foreach ($value->attributes as $attributeValue) {
-                    if (isset($attributeValue->class)) {
-                        if (strpos($attributeValue->class, $searchValue) !== false) {
-                            $this->searched = true;
+                if (isset($value->attributes)) {
+                    foreach ($value->attributes as $attributeValue) {
+                        if (isset($attributeValue->class)) {
+                            if (strpos($attributeValue->class, $searchValue) !== false) {
+                                $this->searched = true;
+                            }
                         }
                     }
                 }
             }
 
             if ($searchTag === 'id') {
-                foreach ($value->attributes as $attributeValue) {
-                    if (isset($attributeValue->id)) {
-                        if (strpos($attributeValue->id, $searchValue) !== false) {
-                            $this->searched = true;
+                if (isset($value->attributes)) {
+                    foreach ($value->attributes as $attributeValue) {
+                        if (isset($attributeValue->id)) {
+                            if (strpos($attributeValue->id, $searchValue) !== false) {
+                                $this->searched = true;
+                            }
                         }
                     }
                 }

@@ -9,23 +9,26 @@ use DOMDocument;
 class Html
 {
 
-    private $url;
+    private $urls;
     private $dom;
 
-    public function __construct($url)
+    public function __construct($urls)
     {
-        $this->url = $url;
+        $this->urls = $urls;
     }
 
     public function get()
     {
-        $response = (new Curl())->get($this->url);
-        $dom = new DOMDocument();
-        @$dom->loadHTML($response->response);
-        $xpath = new \DOMXPath($dom);
-//        $ls_ads = $xpath->query('/html/body');
-        $ls_ads = $xpath->query('/html/body/header/div/div/div[1]');
-        return ($this->parseHtml($ls_ads->item(0)));
+        $result = [];
+        foreach ($this->urls as $url) {
+            $response = (new Curl())->get($url);
+            $dom = new DOMDocument();
+            @$dom->loadHTML($response->response);
+            $ls_ads = (new \DOMXPath($dom))->query('/html/body');
+            array_push( $result, ($this->parseHtml($ls_ads->item(0))));
+        }
+
+        return $result;
     }
 
     public function parseHtml( $el)
